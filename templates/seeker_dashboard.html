@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard | JobConnect{% endblock %}
+{% block content %}
+<section class="page-wrap"><div class="dashboard-head"><div><span class="eyebrow">CANDIDATE SPACE</span><h1>Hello, {{ current_user.name }}</h1><p class="muted">Track the jobs you've applied for.</p></div><a class="btn primary" href="{{ url_for('home') }}">Find jobs →</a></div>
+<div class="panel"><h2>My applications <span class="count">{{ applications|length }}</span></h2>
+{% if applications %}<div class="table-wrap"><table><thead><tr><th>Role</th><th>Company</th><th>Applied</th><th>Status</th></tr></thead><tbody>
+{% for a in applications %}<tr><td><a class="table-link" href="{{ url_for('job_detail',job_id=a.job.id) }}">{{ a.job.title }}</a></td><td>{{ a.job.company }}</td><td>{{ a.created_at.strftime('%d %b %Y') }}</td><td><span class="status">{{ a.status }}</span></td></tr>{% endfor %}
+</tbody></table></div>{% else %}<div class="empty-state"><h3>No applications yet</h3><p>Explore jobs and submit your first application.</p><a class="btn primary" href="{{ url_for('home') }}">Browse jobs</a></div>{% endif %}
+</div></section>
+{% endblock %}

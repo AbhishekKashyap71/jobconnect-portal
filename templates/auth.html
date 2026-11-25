@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Create account' if mode == 'register' else 'Login' }} | JobConnect{% endblock %}
+{% block content %}
+<section class="auth-wrap"><div class="auth-card">
+<div class="auth-icon">J</div><span class="eyebrow">WELCOME TO JOBCONNECT</span>
+<h1>{{ 'Create your account' if mode == 'register' else 'Welcome back' }}</h1>
+<p class="muted">{{ 'Join as a candidate or recruiter.' if mode == 'register' else 'Log in to continue to your dashboard.' }}</p>
+<form method="post" class="stack-form">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+{% if mode == 'register' %}
+<label>Full name<input name="name" required maxlength="100" placeholder="Your name" autocomplete="name"></label>
+{% endif %}
+<label>Email address<input type="email" name="email" required maxlength="150" placeholder="you@example.com" autocomplete="email"></label>
+<label>Password<input type="password" name="password" required minlength="8" placeholder="At least 8 characters" autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}"></label>
+{% if mode == 'register' %}
+<label>Account type<select name="role" required><option value="seeker">Job Seeker</option><option value="recruiter">Recruiter</option></select></label>
+{% else %}<label class="check-row"><input type="checkbox" name="remember" value="1"> Remember me</label>{% endif %}
+<button class="btn primary full" type="submit">{{ 'Create account' if mode == 'register' else 'Login' }} →</button>
+</form>
+<p class="auth-switch">{% if mode == 'register' %}Already registered? <a href="{{ url_for('login') }}">Login</a>{% else %}New to JobConnect? <a href="{{ url_for('register') }}">Create account</a>{% endif %}</p>
+</div></section>
+{% endblock %}

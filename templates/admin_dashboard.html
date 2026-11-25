@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard | JobConnect{% endblock %}
+{% block content %}
+<section class="page-wrap"><div class="dashboard-head"><div><span class="eyebrow">ADMINISTRATION</span><h1>Admin dashboard</h1><p class="muted">Manage platform accounts, listings and applications.</p></div></div>
+<div class="stats-grid"><div class="stat-card"><strong>{{ users|length }}</strong><span>Users</span></div><div class="stat-card"><strong>{{ jobs|length }}</strong><span>Jobs</span></div><div class="stat-card"><strong>{{ applications|length }}</strong><span>Applications</span></div></div>
+<div class="panel section-gap"><h2>Users</h2><div class="table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Current role</th><th>Change role</th></tr></thead><tbody>
+{% for u in users %}<tr><td>{{ u.name }}</td><td>{{ u.email }}</td><td><span class="status">{{ u.role }}</span></td><td><form method="post" action="{{ url_for('change_user_role',user_id=u.id) }}" class="status-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><select name="role">{% for r in ['seeker','recruiter','admin'] %}<option value="{{ r }}" {% if u.role == r %}selected{% endif %}>{{ r }}</option>{% endfor %}</select><button class="btn tiny">Save</button></form></td></tr>{% endfor %}
+</tbody></table></div></div>
+<div class="panel section-gap"><h2>Job listings</h2><div class="table-wrap"><table><thead><tr><th>Title</th><th>Recruiter</th><th>Visibility</th><th>Action</th></tr></thead><tbody>
+{% for job in jobs %}<tr><td>{{ job.title }}<small>{{ job.company }}</small></td><td>{{ job.recruiter.name }}</td><td>{{ 'Active' if job.is_active else 'Hidden' }}</td><td><form method="post" action="{{ url_for('toggle_job',job_id=job.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn tiny">{{ 'Hide' if job.is_active else 'Publish' }}</button></form></td></tr>{% endfor %}
+</tbody></table></div></div>
+<div class="panel section-gap"><h2>Recent applications</h2><div class="table-wrap"><table><thead><tr><th>Candidate</th><th>Job</th><th>Status</th></tr></thead><tbody>{% for a in applications %}<tr><td>{{ a.applicant.name }}</td><td>{{ a.job.title }}</td><td>{{ a.status }}</td></tr>{% endfor %}</tbody></table></div></div>
+</section>
+{% endblock %}

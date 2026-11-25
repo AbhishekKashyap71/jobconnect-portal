@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Find Jobs | JobConnect{% endblock %}
+{% block content %}
+<section class="hero"><div class="hero-inner">
+<span class="eyebrow">YOUR NEXT OPPORTUNITY STARTS HERE</span>
+<h1>Find work that<br><em>moves you forward.</em></h1>
+<p>Explore opportunities, discover great teams and take the next step in your career.</p>
+<form class="search-panel" method="get">
+<label><span>What are you looking for?</span><input name="q" value="{{ q }}" placeholder="Job title, skill or company"></label>
+<label><span>Where?</span><input name="location" value="{{ location }}" placeholder="City or remote"></label>
+<button class="btn primary" type="submit">Search jobs →</button>
+</form><div class="hero-note">Discover roles · Apply online · Track your applications</div>
+</div></section>
+<section class="content-section">
+<div class="section-heading"><div><span class="eyebrow">OPPORTUNITIES</span><h2>Latest jobs</h2></div>
+{% if current_user.is_authenticated and current_user.role in ['recruiter','admin'] %}<a class="text-link" href="{{ url_for('create_job') }}">＋ Post a job</a>{% else %}<a class="text-link" href="{{ url_for('register') }}">Join JobConnect →</a>{% endif %}</div>
+<p class="result-count">{{ jobs|length }} job(s) found</p>
+<div class="job-grid">
+{% for job in jobs %}<article class="job-card">
+<div class="card-top"><div class="company-icon">{{ job.company[:1]|upper }}</div><span class="tag">{{ job.job_type }}</span></div>
+<h3><a href="{{ url_for('job_detail',job_id=job.id) }}">{{ job.title }}</a></h3><p class="company-name">{{ job.company }}</p>
+<div class="job-meta"><span>⌖ {{ job.location }}</span>{% if job.salary %}<span>{{ job.salary }}</span>{% endif %}</div>
+<p class="description">{{ job.description|truncate(125) }}</p><a class="card-link" href="{{ url_for('job_detail',job_id=job.id) }}">View details <span>→</span></a>
+</article>{% else %}<div class="empty-state"><h3>No jobs found</h3><p>Try another search or sign up as a recruiter to post a job.</p></div>{% endfor %}
+</div></section>
+{% endblock %}

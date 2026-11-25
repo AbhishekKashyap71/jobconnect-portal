@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit job' if job else 'Post a job' }} | JobConnect{% endblock %}
+{% block content %}
+<section class="page-wrap narrow"><a class="back-link" href="{{ url_for('dashboard') }}">← Back to dashboard</a>
+<div class="panel"><span class="eyebrow">FOR EMPLOYERS</span><h1>{{ 'Edit job listing' if job else 'Post a new opportunity' }}</h1>
+<form method="post" class="stack-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label>Job title *<input name="title" required maxlength="120" value="{{ job.title if job else '' }}" placeholder="Junior Python Developer"></label>
+<label>Company name *<input name="company" required maxlength="120" value="{{ job.company if job else '' }}" placeholder="Company name"></label>
+<label>Location *<input name="location" required maxlength="120" value="{{ job.location if job else '' }}" placeholder="Lucknow / Remote"></label>
+<label>Job type *<select name="job_type" required><option value="">Choose type</option>{% for t in ['Full-time','Part-time','Internship','Contract','Remote'] %}<option value="{{ t }}" {% if job and job.job_type == t %}selected{% endif %}>{{ t }}</option>{% endfor %}</select></label>
+<label>Salary / stipend<input name="salary" maxlength="80" value="{{ job.salary if job else '' }}" placeholder="₹3–5 LPA / Negotiable"></label>
+<label>Job description *<textarea name="description" rows="7" required placeholder="Describe responsibilities and skills">{{ job.description if job else '' }}</textarea></label>
+<button class="btn primary full">{{ 'Save changes' if job else 'Publish job' }} →</button></form></div></section>
+{% endblock %}
